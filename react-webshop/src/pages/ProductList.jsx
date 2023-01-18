@@ -57,35 +57,45 @@ const ProductList = () => {
             [name]: value
         })
     }
+
+    const toUpperCaseEachWord = (str) => {
+        return str.toLowerCase()
+            .split(' ')
+            .map(word => 
+                word.charAt(0).toUpperCase() 
+                + word.substring(1)).join(' ')
+    }
     
   return (
     <Container>
         <Navbar />
         <Announcement />
-        <Title>Dresses</Title>
+        <Title>{ toUpperCaseEachWord(cat) }</Title>
         <FilterContainer>
             <Filter>
-                <FilterText>Filter Products:</FilterText>
-                <Select name='color' onChange={handleFilters}>
-                    <Option disabled>
-                        Color
+                <FilterText></FilterText>
+                <Select name='color' defaultValue="all-colors" onChange={handleFilters}>
+                    <Option value="all-colors">
+                        All Colors
                     </Option>
-                    <Option>White</Option>
-                    <Option>Black</Option>
-                    <Option>Red</Option>
-                    <Option>Blue</Option>
-                    <Option>Yellow</Option>
-                    <Option>Green</Option>
+                    <Option value="white">White</Option>
+                    <Option value="black">Black</Option>
+                    <Option value="red">Red</Option>
+                    <Option value="blue">Blue</Option>
+                    <Option value="yellow">Yellow</Option>
+                    <Option value="green">Green</Option>
+                    <Option value="golden">Golden</Option>
+                    <Option value="gray">Gray</Option>
                 </Select>
-                <Select name='size' onChange={handleFilters}>
-                    <Option disabled>
-                        Size
+                <Select name='size' defaultValue="all-sizes" onChange={handleFilters}>
+                    <Option value="all-sizes">
+                        All Sizes
                     </Option>
-                    <Option>XS</Option>
-                    <Option>S</Option>
-                    <Option>M</Option>
-                    <Option>L</Option>
-                    <Option>XL</Option>
+                    <Option value="XS">XS</Option>
+                    <Option value="S">S</Option>
+                    <Option value="M">M</Option>
+                    <Option value="L">L</Option>
+                    <Option value="XL">XL</Option>
                 </Select>
             </Filter>
             <Filter>

@@ -21,7 +21,7 @@ router.put("/:id", verifyTokenAndAuthorization, async (req, res) => {
         const { password, ...otherUpdatedUserInfo } = updatedUser._doc //_doc is where mongodb stores the userdata
         res.status(200).json(otherUpdatedUserInfo)
     } catch (err) {
-        res.status(500).json(err)
+         res.status(500).json(err)
     }
 })
 

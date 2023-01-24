@@ -26,12 +26,16 @@ router.post("/register", async (req, res) => {
 router.post("/login", async (req, res) => {
     try {
         const user = await User.findOne({ username: req.body.username })
-        !user && res.status(401).json("Wrong credentials")
+        if(!user){
+            return res.status(401).json("Failed to Log In: Make sure your credentials are correct")
+        }
         //TODO: Change AES to hash with salt
         const hashedPassword = CryptoJS.AES.decrypt(user.password, process.env.PASS_SEC)
         const originalPassword = hashedPassword.toString(CryptoJS.enc.Utf8)
 
-        originalPassword !== req.body.password && res.status(401).json("Wrong credentials")
+        if(originalPassword !== req.body.password){
+            return res.status(401).json("Failed to Log In: Make sure your credentials are correct")
+        }
         
         const accessToken = jwt.sign({
             id: user._id,
@@ -42,9 +46,9 @@ router.post("/login", async (req, res) => {
 
         const { password, ...others} = user._doc //_doc is where mongodb stores the userdata
         
-        res.status(200).json({...others, accessToken}) //others because we dont want people to be able to see the hashed password
+        return res.status(200).json({...others, accessToken}) //others because we dont want people to be able to see the hashed password
     } catch (err) {
-        res.status(500).json(err)
+        return res.status(500).json(err)
     }
 })
 

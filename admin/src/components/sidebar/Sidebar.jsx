@@ -11,24 +11,28 @@ import {LineStyle,
     DynamicFeed,
     ChatBubbleOutline,
     WorkOutline,
-    Report,} from "@mui/icons-material"
+    Report
+} from "@mui/icons-material"
+import { Link } from "react-router-dom"
 
-const Sidebar = () => {
+const Sidebar = ({active}) => {
   return (
     <div className='sidebar'>
         <div className="sidebarWrapper">
             <div className="sidebarMenu">
                 <h3 className="sidebarTitle">DashBoard</h3>
                 <ul className="sidebarList">
-                    <li className="sidebarListItem active">
-                        <LineStyle className="sidebarIcon"/>
-                        Home
-                    </li>
-                    <li className="sidebarListItem">
+                    <Link to="/" className='link'>
+                        <li className={active === "home" ? "sidebarListItem active" : "sidebarListItem"} >
+                            <LineStyle className="sidebarIcon"/>
+                            Home
+                        </li>
+                    </Link>
+                    <li className={active === "analytic" ? "sidebarListItem active" : "sidebarListItem"}>
                         <Timeline className="sidebarIcon"/>
-                        Analytics
+                        Analytic
                     </li>
-                    <li className="sidebarListItem">
+                    <li className={active === "sales" ? "sidebarListItem active" : "sidebarListItem"}>
                         <TrendingUp className="sidebarIcon"/>
                         Sales
                     </li>
@@ -37,19 +41,23 @@ const Sidebar = () => {
             <div className="sidebarMenu">
                 <h3 className="sidebarTitle">Quick Menu</h3>
                 <ul className="sidebarList">
-                    <li className="sidebarListItem">
-                        <PermIdentity className="sidebarIcon"/>
-                        Users
-                    </li>
-                    <li className="sidebarListItem">
-                        <Storefront className="sidebarIcon"/>
-                        Products
-                    </li>
-                    <li className="sidebarListItem">
+                    <Link to="/users" className='link'>
+                        <li className={active === "users" ? "sidebarListItem active" : "sidebarListItem"}>
+                            <PermIdentity className="sidebarIcon"/>
+                            Users
+                        </li>
+                    </Link>
+                    <Link to="/products" className='link'>
+                        <li className={active === "products" ? "sidebarListItem active" : "sidebarListItem"}>
+                            <Storefront className="sidebarIcon"/>
+                            Products
+                        </li>
+                    </Link>
+                    <li className={active === "transactions" ? "sidebarListItem active" : "sidebarListItem"}>
                         <AttachMoney className="sidebarIcon"/>
                         Transactions
                     </li>
-                    <li className="sidebarListItem">
+                    <li className={active === "reports" ? "sidebarListItem active" : "sidebarListItem"}>
                         <BarChart className="sidebarIcon"/>
                         Reports
                     </li>
@@ -58,15 +66,15 @@ const Sidebar = () => {
             <div className="sidebarMenu">
                 <h3 className="sidebarTitle">Notifications</h3>
                 <ul className="sidebarList">
-                    <li className="sidebarListItem">
+                    <li className={active === "mail" ? "sidebarListItem active" : "sidebarListItem"}>
                         <MailOutline className="sidebarIcon"/>
                         Mail
                     </li>
-                    <li className="sidebarListItem">
+                    <li className={active === "feedback" ? "sidebarListItem active" : "sidebarListItem"}>
                         <DynamicFeed className="sidebarIcon"/>
                         Feedback
                     </li>
-                    <li className="sidebarListItem">
+                    <li className={active === "messages" ? "sidebarListItem active" : "sidebarListItem"}>
                         <ChatBubbleOutline className="sidebarIcon"/>
                         Messages
                     </li>
@@ -75,15 +83,15 @@ const Sidebar = () => {
             <div className="sidebarMenu">
                 <h3 className="sidebarTitle">Staff</h3>
                 <ul className="sidebarList">
-                    <li className="sidebarListItem">
+                    <li className={active === "manage" ? "sidebarListItem active" : "sidebarListItem"}>
                         <WorkOutline className="sidebarIcon"/>
                         Manage
                     </li>
-                    <li className="sidebarListItem">
+                    <li className={active === "analytics" ? "sidebarListItem active" : "sidebarListItem"}>
                         <Timeline className="sidebarIcon"/>
                         Analytics
                     </li>
-                    <li className="sidebarListItem">
+                    <li className={active === "reports" ? "sidebarListItem active" : "sidebarListItem"}>
                         <Report className="sidebarIcon"/>
                         Reports
                     </li>

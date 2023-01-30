@@ -1,9 +1,10 @@
-import React, { useState } from 'react'
 import "./userList.css"
+import React, { useState } from 'react'
 import { DataGrid } from "@mui/x-data-grid"
 import { DeleteOutline } from "@mui/icons-material"
 import { userRows } from "../../dummyData"
 import { Link } from "react-router-dom"
+import Sidebar from "../../components/sidebar/Sidebar"
 
 const UserList = () => {
   const [data, setData] = useState(userRows)
@@ -40,15 +41,18 @@ const UserList = () => {
   ]
 
   return (
-    <div className='userList'>
-      <DataGrid
-        rows={data}
-        columns={columns}
-        disableSelectionOnClick
-        pageSize={8}
-        checkboxSelection
-      />
-    </div>
+    <>
+      <Sidebar active="users"/>
+      <div className='userList'>
+        <DataGrid
+          rows={data}
+          columns={columns}
+          disableSelectionOnClick
+          pageSize={8}
+          checkboxSelection
+        />
+      </div>
+    </>
   )
 }
 

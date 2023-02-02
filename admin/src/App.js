@@ -12,11 +12,15 @@ import NewUser from "./pages/newUser/NewUser";
 import ProductList from "./pages/productList/ProductList";
 import Product from "./pages/product/Product"
 import NewProduct from "./pages/newProduct/NewProduct"
+import Login from "./pages/login/Login"
 
 function App() {
   return (
     <Router>
-      <Topbar />
+      {window.location.pathname !== '/login' && <Topbar />} {/*Do not show topbar on login page */}
+      <Routes>
+        <Route exact path="/login" element={ <Login /> } />
+      </Routes>
       <div className="container">
         <Routes>
           <Route exact path="/" element={ <Home /> } />

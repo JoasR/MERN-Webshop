@@ -1,67 +1,41 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import "./widgetSmall.css"
 import { Visibility } from "@mui/icons-material"
+import { userRequest } from "../../requestMethods"
 
 const WidgetSmall = () => {
+    const [users, setUsers] = useState([])
+
+    useEffect(() => {
+        const getUsers = async() => {
+            try {
+                const res = await userRequest.get("users/?new=true")
+                setUsers(res.data)   
+            } catch (err) {
+
+            }
+        }
+        getUsers()
+    })
   return (
     <div className='widgetSmall'>
         <h3 className="widgetSmallTitle">New Members</h3>
         <ul className="widgetSmallList">
-            <li className="widgetSmallListItem">
-                <img src="https://images.pexels.com/photos/3992656/pexels-photo-3992656.png?auto=compress&cs=tinysrgb&dpr=2&w=500" alt="" className="widgetSmallImage" />
-                <div className="widgetSmallUser">
-                    <span className="widgetSmallUsername">Anna Keller</span>
-                    <span className='widgetSmallUserTitle'>Software Engineer</span>
-                </div>
-                <button className="widgetSmallButton">
-                    <Visibility className="widgetSmallIcon"/>
-                    Display
-                </button>
-            </li>
-            <li className="widgetSmallListItem">
-                <img src="https://images.pexels.com/photos/3992656/pexels-photo-3992656.png?auto=compress&cs=tinysrgb&dpr=2&w=500" alt="" className="widgetSmallImage" />
-                <div className="widgetSmallUser">
-                    <span className="widgetSmallUsername">Anna Keller</span>
-                    <span className='widgetSmallUserTitle'>Software Engineer</span>
-                </div>
-                <button className="widgetSmallButton">
-                    <Visibility className="widgetSmallIcon"/>
-                    Display
-                </button>
-            </li>
-            <li className="widgetSmallListItem">
-                <img src="https://images.pexels.com/photos/3992656/pexels-photo-3992656.png?auto=compress&cs=tinysrgb&dpr=2&w=500" alt="" className="widgetSmallImage" />
-                <div className="widgetSmallUser">
-                    <span className="widgetSmallUsername">Anna Keller</span>
-                    <span className='widgetSmallUserTitle'>Software Engineer</span>
-                </div>
-                <button className="widgetSmallButton">
-                    <Visibility className="widgetSmallIcon"/>
-                    Display
-                </button>
-            </li>
-            <li className="widgetSmallListItem">
-                <img src="https://images.pexels.com/photos/3992656/pexels-photo-3992656.png?auto=compress&cs=tinysrgb&dpr=2&w=500" alt="" className="widgetSmallImage" />
-                <div className="widgetSmallUser">
-                    <span className="widgetSmallUsername">Anna Keller</span>
-                    <span className='widgetSmallUserTitle'>Software Engineer</span>
-                </div>
-                <button className="widgetSmallButton">
-                    <Visibility className="widgetSmallIcon"/>
-                    Display
-                </button>
-            </li>
-            <li className="widgetSmallListItem">
-                <img src="https://images.pexels.com/photos/3992656/pexels-photo-3992656.png?auto=compress&cs=tinysrgb&dpr=2&w=500" alt="" className="widgetSmallImage" />
-                <div className="widgetSmallUser">
-                    <span className="widgetSmallUsername">Anna Keller</span>
-                    <span className='widgetSmallUserTitle'>Software Engineer</span>
-                </div>
-                <button className="widgetSmallButton">
-                    <Visibility className="widgetSmallIcon"/>
-                    Display
-                </button>
-            </li>
+            {users.map(user => {
+                return (
+                    <li className="widgetSmallListItem" key={user._id}>
+                        <img src={user.img || "https://crowd-literature.eu/wp-content/uploads/2015/01/no-avatar.gif"} alt="" className="widgetSmallImage" />
+                        <div className="widgetSmallUser">
+                            <span className="widgetSmallUsername">{user.username}</span>
+                            {/* <span className='widgetSmallUserTitle'>user title</span> */}
+                        </div>
+                        <button className="widgetSmallButton">
+                            <Visibility className="widgetSmallIcon"/>
+                            Display
+                        </button>
+                    </li>
+                )
+            })}
         </ul>
     </div>
   )

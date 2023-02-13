@@ -1,16 +1,42 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import "./featuredInfo.css"
 import { ArrowDownward, ArrowUpward } from "@mui/icons-material"
+import { userRequest } from "../../requestMethods"
 
 const FeaturedInfo = () => {
+
+    const [income, setIncome] = useState([])
+    const [percentage, setPercentage] = useState(0)
+
+    useEffect(() => {
+        const getIncome = async() => {
+            try {
+                const res = await userRequest.get("orders/income") //returns last month and this month
+                setIncome(res.data)
+                setPercentage(100 * (res.data[1].total - res.data[0].total) / res.data[0].total ) //calculates the change in percentage
+            } catch (err) {
+                
+            }
+        }
+        getIncome()
+    }, [])
+
+    // console.log(income)
+    // console.log(percentage)
+
   return (
     <div className='featured'>
         <div className="featuredItem">
             <span className="featuredTitle">Revenue</span>
             <div className="featuredMoneyContainer">
-                <span className="featuredMoney">€2,815</span>
+                <span className="featuredMoney">€{income[1]?.total}</span>
                 <div className="featuredMoneyRate">
-                    -11.4 <ArrowDownward className='featuredIcon negative'/>
+                    {Math.floor(percentage)}% 
+                    {
+                        percentage < 0 ? 
+                        <ArrowDownward className='featuredIcon negative'/> : 
+                        <ArrowUpward className='featuredIcon positive'/>
+                    }
                 </div>
             </div>
             <span className="featuredSub">Compare to last month</span>

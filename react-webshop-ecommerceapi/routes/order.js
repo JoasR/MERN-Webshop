@@ -1,5 +1,6 @@
 const router = require("express").Router()
 const Order = require("../models/Order")
+const Product = require("../models/Product")
 const { verifyTokenAndAuthorization, verifyTokenAndAdmin, verifyToken } = require("./verifyToken")
 
 //CREATE
@@ -59,8 +60,63 @@ router.get("/", verifyTokenAndAdmin, async (req, res) => {
     }
 })
 
+//GET PRODUCT STATS
+router.get('/sales/:productId', verifyTokenAndAdmin, async (req, res) => {
+    const productId = req.params.productId;
+    const product = await Product.findById(productId);
+    const threeMonthsAgo = new Date();
+    threeMonthsAgo.setMonth(threeMonthsAgo.getMonth() - 3);
+    console.log(threeMonthsAgo)
+    
+    try {
+        if(!product){
+            return res.status(400).json("Product could not be found")
+        }
+
+        const sales = await Order.aggregate([
+            {
+              $match: {
+                'products.productId': productId,
+                createdAt: { $gte: threeMonthsAgo },
+              },
+            },
+            {
+              $unwind: '$products',
+            },
+            {
+              $match: {
+                'products.productId': productId,
+              },
+            },
+            {
+              $group: {
+                _id: {
+                     $month: "$createdAt",
+                },
+                year: { $first: { $year: "$createdAt" } },
+                totalSales: {
+                  $sum: {
+                    $multiply: ['$products.quantity', product.price],
+                  },
+                },
+              },
+            },
+            {
+                $sort: { year: 1, _id: 1 }
+            }
+          ]);
+          res.status(200).json(sales);
+    } catch (err) {
+        res.status(500).json(err)
+    }
+
+  
+    
+  });
+
 //GET MONTHLY INCOME
 router.get("/income", verifyTokenAndAdmin, async (req, res) => {
+    const productId = req.query.pid
     const date = new Date()
     const lastMonth = new Date(date.setMonth(date.getMonth() -1))
     const previousMonth = new Date(date.setMonth(lastMonth.getMonth() -1)) //for example lets say its now september first then lastmonth will be august first and previousmonth will be july first
@@ -70,7 +126,9 @@ router.get("/income", verifyTokenAndAdmin, async (req, res) => {
 
     try {
         const income = await Order.aggregate([
-            { $match: { createdAt: { $gte: previousMonth } } }, //Basically last 2 months
+            { $match: { createdAt: { $gte: previousMonth }, ...(productId && { // conditional objects with spread operator. If there is a productid, create a new condition: in this case check if req.query.pid equals productId
+                products: {$elemMatch: { productId }} // this is the same as writing: productId: productId
+            }) } }, //Basically last 2 months
             {
                 $project: {
                     month: { $month: "$createdAt" },
@@ -82,6 +140,9 @@ router.get("/income", verifyTokenAndAdmin, async (req, res) => {
                     _id: "$month",
                     total: { $sum: "$sales"} // total of all amounts of all orders combined from the last 2 months: _id: 1 = last month, _id: 2 = the month before that
                 }
+            },
+            {
+                $sort: { _id: 1 }
             }
         ])
         res.status(200).json(income)

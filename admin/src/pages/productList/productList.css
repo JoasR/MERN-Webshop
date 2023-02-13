@@ -1,5 +1,11 @@
 .productList{
     flex: 4;
+    padding-right: 10px;
+    padding-top: 10px;
+}
+
+.grid{
+    height: 50%;
 }
 
 .productListItem{
@@ -28,4 +34,10 @@
 .productListDelete{
     color: red;
     cursor: pointer;
+}
+
+.message{
+    color: red;
+    font-size: 16px;
+    flex: 1;
 }

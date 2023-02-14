@@ -108,10 +108,58 @@ router.get('/sales/:productId', verifyTokenAndAdmin, async (req, res) => {
           res.status(200).json(sales);
     } catch (err) {
         res.status(500).json(err)
-    }
+    } 
+  });
 
+  //GET TOTAL SALES OF 1 PRODUCT BY ID
+  router.get('/products/:productId/total-sales', verifyTokenAndAdmin, async (req, res) => {
+    const productId = req.params.productId;
+    const product = await Product.findById(productId);
   
-    
+    try {
+      if (!product) {
+        return res.status(400).json("Product could not be found")
+      }
+  
+      const result = await Order.aggregate([
+        {
+          $match: {
+            'products.productId': productId,
+          },
+        },
+        {
+          $unwind: '$products',
+        },
+        {
+          $match: {
+            'products.productId': productId,
+          },
+        },
+        {
+          $group: {
+            _id: null,
+            totalSales: {
+              $sum: {
+                $multiply: ['$products.quantity', product.price],
+              },
+            },
+            count: {
+              $sum: '$products.quantity',
+            },
+          },
+        },
+      ]);
+  
+      const totalSales = result.length > 0 ? result[0].totalSales : 0;
+      const count = result.length > 0 ? result[0].count : 0;
+  
+      res.status(200).json({
+        totalSales: totalSales,
+        count: count,
+      });
+    } catch (err) {
+      res.status(500).json(err)
+    }
   });
 
 //GET MONTHLY INCOME

@@ -13,6 +13,7 @@ const Product = () => {
   const productId = location.pathname.split("/")[2]
   // console.log(location.pathname + "    " + productId)
   const [productStats, setProductStats] = useState([])
+  const [totalProductSales, setTotalProductSales] = useState(null)
 
   const product = useSelector(state => state.product.products.find(product => product._id === productId))
 
@@ -48,6 +49,18 @@ const Product = () => {
     getProductStats()
   }, [productId, MONTHS])
 
+  useEffect(() => {
+    const getTotalProductSales = async () => {
+      try {
+        const res = await userRequest.get(`orders/products/${productId}/total-sales`)
+        setTotalProductSales(res.data)
+      } catch (err) {
+        
+      }
+    }
+    getTotalProductSales()
+  }, [productId])
+
   return (
     <>
       <Sidebar active="products" />
@@ -74,7 +87,11 @@ const Product = () => {
               </div>
               <div className="productInfoItem">
                 <span className="productInfoKey">Sales:</span>
-                <span className="productInfoValue">5123</span>
+                <span className="productInfoValue">{totalProductSales?.totalSales}</span>
+              </div>
+              <div className="productInfoItem">
+                <span className="productInfoKey">Number Sold:</span>
+                <span className="productInfoValue">{totalProductSales?.count}</span>
               </div>
               {/* <div className="productInfoItem">
                 <span className="productInfoKey">Active:</span>

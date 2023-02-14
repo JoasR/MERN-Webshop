@@ -34,7 +34,7 @@ const Home = () => {
           setUserStats(prevState => {
             return [
               ...prevState,
-              {name: MONTHS[item._id - 1], "Active Users": item.total} //Made like this in the api, whens ending user stats. Id is the month so id: 0 is jan, id 1 is feb... and now name prop is set to corresponding month from MONTHS
+              {name: MONTHS[item._id.month - 1], "Active Users": item.total} //Made like this in the api, whens ending user stats. Id is the month so id: 0 is jan, id 1 is feb... and now name prop is set to corresponding month from MONTHS
             ]
           })
         )

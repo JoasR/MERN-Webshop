@@ -1,12 +1,23 @@
 .newProduct{
     flex: 4;
+    margin-left: 10px;
 }
 
 .addProductForm{
     margin-top: 10px;
     display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
+}
+
+.formLeft{
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.formRight{
+    display: flex;
+    flex-direction: column;
+    flex: 1;
 }
 
 .addProductItem{
@@ -14,7 +25,7 @@
     flex-direction: column;
     width: 300px;
     margin-bottom: 10px;
-    width: 45%;
+    width: 80%;
 }
 
 .addProductItem > label{
@@ -25,6 +36,7 @@
 
 .addProductItem > input, textarea{
     padding: 10px;
+    width: 100%
 }
 
 textarea{
@@ -49,4 +61,22 @@ textarea{
 .uploadProgress{
     font-size: 14px;
     color: red;
+    margin-left: 10px;
+}
+
+.uploadSuccesMessage{
+    font-size: 16px;
+    color: green;
+    margin-left: 20px;
+}
+
+.imagePreviewContainer{
+    display: flex;
+    align-items: center;
+}
+
+.imagePreview{
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
 }

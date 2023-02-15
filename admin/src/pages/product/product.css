@@ -81,11 +81,13 @@
 .productForm{
     display: flex;
     justify-content: space-between;
+    gap: 100px;
 }
 
 .productFormLeft{
     display: flex;
     flex-direction: column;
+    flex: 1;
 }
 
 .productFormLeft > label{
@@ -103,6 +105,34 @@
 .productFormLeft > select {
     margin-bottom: 10px;
 }
+
+.productFormLeft > textarea{
+    height: 90px;
+    margin-bottom: 10px;
+}
+
+.productFormMiddle{
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.productFormMiddle > label{
+    margin-bottom: 10px;
+    color: gray;
+}
+
+.productFormMiddle > input{
+    margin-bottom: 10px;
+    border: none;
+    padding: 5px;
+    border-bottom: 1px solid gray;
+}
+
+.productFormMiddle > select {
+    margin-bottom: 10px;
+}
+
 .productUploadImg{
     width: 100px;
     height: 100px;
@@ -114,20 +144,39 @@
 .productFormRight{
     display: flex;
     flex-direction: column;
-    justify-content: space-around;
+    flex: 1;
+    text-align: center;
+    justify-content: center;
 }
 
 .productUpload{
     display: flex;
     align-items: center;
+    justify-content: center;
 }
 
 .productButton{
     border: none;
     padding: 5px;
     border-radius: 5px;
+    height: 40px;
+    width: 75%;
     background-color: darkblue;
     color: #fff;
     font-weight: 600;
     cursor: pointer;
+    margin: 25px auto 0px auto;
+}
+
+.uploadProgress{
+    font-size: 14px;
+    color: red;
+    margin-top: 20px;
+}
+
+.updateSuccesMessage{
+    font-size: 16px;
+    color: green;
+    margin: 20px auto 0px auto;
+    width: 75%;
 }

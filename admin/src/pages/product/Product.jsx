@@ -7,6 +7,10 @@ import { Publish } from "@mui/icons-material"
 import Sidebar from '../../components/sidebar/Sidebar'
 import { useSelector } from "react-redux"
 import { userRequest } from '../../requestMethods'
+import { useDispatch } from 'react-redux'
+import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import app from "../../firebase"
+import { updateProduct } from '../../redux/apiCalls'
 
 const Product = () => {
   const location = useLocation()
@@ -14,8 +18,18 @@ const Product = () => {
   // console.log(location.pathname + "    " + productId)
   const [productStats, setProductStats] = useState([])
   const [totalProductSales, setTotalProductSales] = useState(null)
-
+  
   const product = useSelector(state => state.product.products.find(product => product._id === productId))
+
+  const [inputs, setInputs] = useState({title: product.title, desc: product.desc, price: product.price, inStock: product.inStock})
+  const [file, setFile] = useState(null)
+  const [categories, setCategories] = useState(product.categories)
+  const [sizes, setSizes] = useState(product.size)
+  const [colors, setColors] = useState(product.color)
+  const [uploadPercentage, setUploadPercentage] = useState(0)
+  const [preview, setPreview] = useState(null)
+  const [isClicked, setIsClicked] = useState(false)
+  const dispatch = useDispatch()
 
   const MONTHS = useMemo(() => [
     "Jan",
@@ -61,6 +75,103 @@ const Product = () => {
     getTotalProductSales()
   }, [productId])
 
+  const handleChange = (e) => {
+    const {name, value} = e.target
+    setInputs(prevState => {
+      return(
+        {
+          ...prevState,
+          [name]: value
+        }
+      )
+    })
+  } 
+
+  const handleFileInputChange = (e) => {
+    const selectedFile = e.target.files[0];
+    setFile(selectedFile);
+
+    if (selectedFile) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPreview(reader.result);
+      };
+      reader.readAsDataURL(selectedFile);
+    } else {
+      setPreview(null);
+    }
+  };
+
+  const handleCategoriesChange = (e) => {
+    const valueWithoutSpaces = e.target.value.replace(/\s/g, "");
+    setCategories(valueWithoutSpaces.split(","))
+  }
+
+  const handleSizeChange = (e) => {
+    const valueWithoutSpaces = e.target.value.replace(/\s/g, "");
+    setSizes(valueWithoutSpaces.split(","))
+  }
+
+  const handleColorChange = (e) => {
+    const valuesWithoutSpaces = e.target.value.replace(/\s/g, "")
+    setColors(valuesWithoutSpaces.split(","))
+  }
+  
+  const handleClick = (e) => {
+    e.preventDefault()
+    setIsClicked(true)
+    if(file){
+      const fileName = new Date().getTime() + file.name
+      const storage = getStorage(app)
+      const storageRef = ref(storage, fileName)
+      const uploadTask = uploadBytesResumable(storageRef, file);
+
+      // Register three observers:
+      // 1. 'state_changed' observer, called any time the state changes
+      // 2. Error observer, called on failure
+      // 3. Completion observer, called on successful completion
+      uploadTask.on('state_changed', 
+        (snapshot) => {
+          // Observe state change events such as progress, pause, and resume
+          // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
+          const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          setUploadPercentage(Math.floor(progress))
+          console.log('Upload is ' + progress + '% done');
+          console.log(uploadPercentage)
+          switch (snapshot.state) {
+            case 'paused':
+              console.log('Upload is paused');
+              break;
+            case 'running':
+              console.log('Upload is running');
+              break;
+            default:
+          }
+        }, 
+        (error) => {
+          // Handle unsuccessful uploads
+        }, 
+        () => {
+          // Handle successful uploads on complete
+          // For instance, get the download URL: https://firebasestorage.googleapis.com/...
+          getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+            // console.log('File available at', downloadURL);
+            // console.log({...inputs, img: downloadURL, categories: categories, color: colors, size: sizes})$
+            // console.log(inputs)
+            // console.log({...inputs, img: downloadURL, categories: categories, color: colors, size: sizes})
+            // console.log("download " + downloadURL)
+            // console.log("imgUrl " + imgUrl)
+            const updatedProduct = {...inputs, img: downloadURL, categories: categories, color: colors, size: sizes}
+            updateProduct(productId, updatedProduct, dispatch)
+          });
+        }
+      );
+    } else {
+      const updatedProduct = {...inputs, img: product.img, categories: categories, color: colors, size: sizes}
+      updateProduct(productId, updatedProduct, dispatch)
+    }
+  }
+
   return (
     <>
       <Sidebar active="products" />
@@ -99,7 +210,7 @@ const Product = () => {
               </div> */}
               <div className="productInfoItem">
                 <span className="productInfoKey">In Stock:</span>
-                <span className="productInfoValue">{product.inStock}</span>
+                <span className="productInfoValue">{product.inStock ? "Yes" : "No"}</span>
               </div>
             </div>
           </div>
@@ -107,14 +218,22 @@ const Product = () => {
         <div className="productBottom">
           <form className="productForm">
             <div className="productFormLeft">
-              <label>Product Name</label>
-              <input type="text" placeholder={product.title}/>
-              <label>Product Description</label>
-              <input type="text" placeholder={product.desc}/>
-              <label>Product Price</label>
-              <input type="text" placeholder={product.price}/>
+              <label>Title</label>
+              <input name='title' type="text" onChange={handleChange} placeholder={product.title}/>
+              <label>Description</label>
+              <textarea name='desc' onChange={handleChange} placeholder={product.desc} />
+              <label>Price</label>
+              <input name='price' type="text" onChange={handleChange} placeholder={product.price}/>
+            </div>  
+            <div className="productFormMiddle">
+            <label>Categories</label>
+              <input name='categories' type="text" onChange={handleCategoriesChange} placeholder={product.categories}/>
+              <label>Colors</label>
+              <input name='color' type="text" onChange={handleColorChange} placeholder={product.color}/>
+              <label>Sizes</label>
+              <input name='size' type="text" onChange={handleSizeChange} placeholder={product.size}/>
               <label>In Stock</label>
-              <select name="inStock" id="inStock">
+              <select onChange={handleChange} name="inStock" id="inStock">
                 <option value="true">Yes</option>  
                 <option value="false">No</option>  
               </select>
@@ -123,16 +242,18 @@ const Product = () => {
                 <option value="yes">Yes</option>  
                 <option value="no">No</option>  
               </select> */}
-            </div>  
+            </div>
             <div className="productFormRight">
               <div className="productUpload">
-                <img src={product.img} alt="" className="productUploadImg" />
+                <img src={preview ? preview : product.img} alt="" className="productUploadImg" />
                 <label htmlFor="file">
                   <Publish style={{cursor: "pointer"}}/>  
                 </label>
-                <input type="file" id='file' style={{display: "none"}} />
+                <input type="file" id='file' onChange={handleFileInputChange} style={{display: "none"}} />
               </div>
-              <button className='productButton'>Update</button>
+              {uploadPercentage !== 0 && <span className='uploadProgress'>Upload is {uploadPercentage}% done.</span> }
+              <button className='productButton' onClick={handleClick}>Update</button>
+              {(uploadPercentage === 100 || (!file && isClicked)) && <span className="updateSuccesMessage">Your product has successfully been updated!</span>}
             </div>  
           </form>
         </div>

@@ -15,7 +15,8 @@ import Success from "./pages/Success";
 import { useSelector } from "react-redux";
 
 const App = () => {
-  const user = useSelector((state) => state.user.currentUser)
+  // const user = useSelector((state) => state.user.currentUser)
+  const user = null
   return (
     <Router>
       <ScrollToTop>

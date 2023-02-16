@@ -2,6 +2,8 @@ import React, { useEffect } from 'react'
 import styled from 'styled-components'
 import { mobile } from '../responsive'
 import { useState } from "react"
+import { register } from '../redux/apiCalls'
+import { useDispatch, useSelector } from 'react-redux'
 
 const Container = styled.div`
     width: 100vw;
@@ -175,9 +177,14 @@ const Register = () => {
         setFocusConfirmPassword(true)
     }
 
+    const dispatch = useDispatch()
+
+    const {isFetching, error} = useSelector(state => state.user)
+
     const handleClick = (e) => {
         e.preventDefault()
         console.log("account created successfully: " + firstName + lastName + email + username + password + confirmPassword)
+        register(dispatch, {username, email, firstName, lastName, password})
     }
 
     //this validations only happen when the button is clicked. can you make it so these validations are done live, so ill instantly see the alerts as soon as the user uses the inputs?
@@ -270,9 +277,10 @@ const Register = () => {
                 By creating an account, I consent to the processing of my personal data in accordance with the{' '}
                 <b>PRIVACY POLICY</b>
                 </Agreement>
-                <Button disabled={!isFormValid} onClick={handleClick}>
+                <Button disabled={!isFormValid || isFetching} onClick={handleClick}>
                 CREATE
                 </Button>
+                { error && <ErrorMessage style={{marginLeft: "10px", marginTop: "15px"}}>{error}</ErrorMessage> }
             </Form>
         </Wrapper>
     </Container>

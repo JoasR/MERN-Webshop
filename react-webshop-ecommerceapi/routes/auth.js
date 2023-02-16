@@ -9,6 +9,8 @@ router.post("/register", async (req, res) => {
     const newUser = new User({
         username: req.body.username,
         email: req.body.email,
+        firstName: req.body.firstName,
+        lastName: req.body.lastName,
         //TODO: Change AES to hash with salt!
         password: CryptoJS.AES.encrypt(req.body.password, process.env.PASS_SEC).toString()
     })
@@ -17,6 +19,10 @@ router.post("/register", async (req, res) => {
         const savedUser = await newUser.save()
         res.status(201).json(savedUser)
     }catch(err){
+        if (err.code === 11000) {
+            // A duplicate key error (code 11000) indicates a duplicate username
+            return res.status(400).json("Username already exists");
+        }
         res.status(500).json(err)
     }
 })

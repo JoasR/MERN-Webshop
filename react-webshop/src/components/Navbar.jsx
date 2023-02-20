@@ -3,8 +3,9 @@ import { Badge } from '@mui/material'
 import React from 'react'
 import styled from 'styled-components'
 import {mobile} from "../responsive"
-import { useSelector } from "react-redux"
-import { Link } from 'react-router-dom'
+import { useDispatch, useSelector } from "react-redux"
+import { Link, useNavigate } from 'react-router-dom'
+import { logout } from "../redux/userRedux"
 
 const Container = styled.div`
     height: 60px;
@@ -70,9 +71,58 @@ const MenuItem = styled.div`
     ${mobile({ fontSize: "12px", marginLeft: "10px" })}
 `
 
+const MainMenuItem = styled.div`
+    font-size: 14px;
+    cursor: pointer;
+    padding: 10px;
+    ${mobile({ fontSize: "12px", marginLeft: "10px" })}
+`
+
+const MenuItemContainer = styled.div`
+    cursor: pointer;
+    padding: 10px 0px;
+
+    &:hover{
+        background-color: teal;
+        color: #fff;
+    }
+`
+
+const Dropdown = styled.div`
+  position: relative;
+
+  &:hover .dropdown-content {
+    display: block;
+  }
+`
+
+const DropdownContent = styled.div`
+  display: none;
+  position: absolute;
+  top: 35px;
+  right: 0px;
+  background-color: white;
+  min-width: 160px;
+  z-index: 1;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  pointer-events: none; /* Disable pointer events so that the cursor can pass through */
+  
+  ${Dropdown}:hover & {
+    display: block;
+    pointer-events: auto; /* Enable pointer events when the dropdown is hovered */
+  }
+`
 
 const Navbar = () => {
     const quantity = useSelector(state => state.cart.quantity) // state.cart is from the store.js
+    const currentUser = useSelector(state => state.user.currentUser) 
+    const dispatch = useDispatch()
+    const navigate = useNavigate()
+
+    const handleLogout = () => {
+        dispatch(logout())
+        navigate("/")
+    }
 
     return (
     <Container>
@@ -86,9 +136,20 @@ const Navbar = () => {
             </Left>    
             <Center><Logo>FRISK.</Logo></Center>    
             <Right>
-
-                <MenuItem>REGISTER</MenuItem>    
-                <MenuItem>SIGN IN</MenuItem>
+                {currentUser 
+                    ?   <Dropdown className="dropdown">
+                            <MainMenuItem>{(currentUser.username).toUpperCase()}</MainMenuItem>
+                            <DropdownContent className="dropdown-content">
+                                <MenuItemContainer onClick={handleLogout}> 
+                                    <MenuItem>LOGOUT</MenuItem>
+                                </MenuItemContainer>
+                            </DropdownContent>
+                        </Dropdown>
+                    :   <>
+                            <MenuItem>REGISTER</MenuItem>    
+                            <MenuItem>SIGN IN</MenuItem>
+                        </>
+                }
                 <Link to="/cart">
                     <MenuItem>
                         <Badge badgeContent={quantity} color="primary">

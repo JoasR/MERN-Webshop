@@ -79,7 +79,8 @@ const FilterColor = styled.div`
     margin: 0 5px;
     cursor: pointer;
     opacity: ${props => props.color === props.selectedColor ? "1" : "0.5"};
-    border: ${props => props.color === props.selectedColor ? "solid 2px #000" : "none"};
+    border: ${props => props.color === props.selectedColor ? "solid 2px #000" : "solid 1px #000"};
+    
 
     &:hover{
         border: 2px solid #000;

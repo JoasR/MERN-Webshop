@@ -17,6 +17,7 @@ const Login = () => {
         login(dispatch, { username, password })
         setIsClicked(true)
     }
+
     return (
         <div className='loginContainer'>
             <h1 className='loginTitle'>Webshop Admin Panel. Please Login as Admin.</h1>

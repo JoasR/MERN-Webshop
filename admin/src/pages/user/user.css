@@ -125,7 +125,6 @@
 .userUpdateRight{
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
 }
 
 .userUpdateUpload{
@@ -153,4 +152,22 @@
     background-color: darkblue;
     color: #fff;
     font-weight: bolder;
+    margin-top: 50px;
+}
+
+.userUpdateButton:disabled{
+    background-color: black;
+    cursor: not-allowed;
+}
+
+.errorMessage{
+    color: red;
+    font-size: 14px;
+    margin-top: 50px;
+}
+
+.successMessage{
+    color: green;
+    font-size: 14px;
+    margin-top: 50px;
 }

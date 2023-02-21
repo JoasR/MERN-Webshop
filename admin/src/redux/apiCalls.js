@@ -14,7 +14,7 @@ import {
     addProductFailure
 } from "./productRedux"
 import { loginStart, loginSuccess, loginFailure } from "./userRedux"
-import { getAppUsersStart, getAppUsersSuccess, getAppUsersFailure, deleteUserStart, deleteUserSuccess, deleteUserFailure } from "./appUserRedux"
+import { getAppUsersStart, getAppUsersSuccess, getAppUsersFailure, deleteUserStart, deleteUserSuccess, deleteUserFailure, updateUserStart, updateUserSuccess, updateUserFailure, addUserStart, addUserSuccess, addUserFailure } from "./appUserRedux"
 
 export const login = async (dispatch, user) => {
     dispatch(loginStart())
@@ -44,6 +44,26 @@ export const deleteUser = async (id, dispatch) => {
         dispatch(deleteUserSuccess({ message: res.data, id: id }))
     } catch (err) {
         dispatch(deleteUserFailure())
+    }
+}
+
+export const updateUser = async(id, updatedUser, dispatch) => {
+    dispatch(updateUserStart())
+    try {
+        const res = await userRequest.put(`/users/${id}`, updatedUser)
+        dispatch(updateUserSuccess(res.data))
+    } catch (err) {
+        dispatch(updateUserFailure())
+    }
+}
+
+export const addUser = async(user, dispatch) => {
+    dispatch(addUserStart())
+    try {
+        const res = await userRequest.post("/auth/register", user)
+        dispatch(addUserSuccess(res.data))
+    } catch (err) {
+        dispatch(addUserFailure(err.response))
     }
 }
 

@@ -29,3 +29,9 @@
     color: red;
     cursor: pointer;
 }
+
+.message{
+    color: red;
+    font-size: 16px;
+    flex: 1;
+}

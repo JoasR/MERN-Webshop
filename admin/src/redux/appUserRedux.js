@@ -43,8 +43,35 @@ export const appUserSlice = createSlice({
             state.isFetching = false
             state.error = true
         },
+         //UPDATE
+         updateUserStart: (state) => {
+            state.isFetching = true
+            state.error = false
+        },
+        updateUserSuccess: (state, action) => {
+            state.isFetching = false
+            state.products[state.appUsers.findIndex((user) => user._id === action.payload.id)] = action.payload.appUser
+            state.error = false
+        },
+        updateUserFailure: (state) => {
+            state.isFetching = false
+            state.error = true
+        },
+        //ADD
+        addUserStart: (state) => {
+            state.isFetching = true
+            state.error = false
+        },
+        addUserSuccess: (state, action) => {
+            state.isFetching = false
+            state.appUsers.push(action.payload)
+        },
+        addUserFailure: (state, action) => {
+            state.isFetching = false
+            state.error = action.payload.data
+        }
     }
 })
 
-export const { getAppUsersStart, getAppUsersSuccess, getAppUsersFailure, deleteUserStart, deleteUserSuccess, deleteUserFailure } = appUserSlice.actions
+export const { getAppUsersStart, getAppUsersSuccess, getAppUsersFailure, deleteUserStart, deleteUserSuccess, deleteUserFailure, updateUserStart, updateUserSuccess, updateUserFailure, addUserStart, addUserSuccess, addUserFailure } = appUserSlice.actions
 export default appUserSlice.reducer

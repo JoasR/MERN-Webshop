@@ -30,6 +30,7 @@ const Product = () => {
   const [preview, setPreview] = useState(null)
   const [isClicked, setIsClicked] = useState(false)
   const dispatch = useDispatch()
+  const defaultInputs = {title: product.title, desc: product.desc, price: product.price, inStock: product.inStock, categories: product.categories, size: product.size, color: product.color, img: product.img}
 
   const MONTHS = useMemo(() => [
     "Jan",
@@ -162,12 +163,50 @@ const Product = () => {
             // console.log("download " + downloadURL)
             // console.log("imgUrl " + imgUrl)
             const updatedProduct = {...inputs, img: downloadURL, categories: categories, color: colors, size: sizes}
+            let hasEmptyValue = false;
+
+            for (const [key, value] of Object.entries(updatedProduct)) {
+              if (Array.isArray(value)) {
+                if (value.length === 0 || (value.length === 1 && value[0] === "")) {
+                  updatedProduct[key] = defaultInputs[key];
+                }
+              } else if (typeof value === "string" && value === "") {
+                updatedProduct[key] = defaultInputs[key];
+              }
+              hasEmptyValue = hasEmptyValue || (Array.isArray(value) ? value.length === 0 : value === "");
+            }
+
+            if (hasEmptyValue) {
+              // At least one value in inputs is an empty string or empty array
+              // Set it back to the default value
+              setInputs(defaultInputs);
+              return;
+            }
             updateProduct(productId, updatedProduct, dispatch)
           });
         }
       );
     } else {
       const updatedProduct = {...inputs, img: product.img, categories: categories, color: colors, size: sizes}
+      let hasEmptyValue = false;
+
+      for (const [key, value] of Object.entries(updatedProduct)) {
+        if (Array.isArray(value)) {
+          if (value.length === 0 || (value.length === 1 && value[0] === "")) {
+            updatedProduct[key] = defaultInputs[key];
+          }
+        } else if (typeof value === "string" && value === "") {
+          updatedProduct[key] = defaultInputs[key];
+        }
+        hasEmptyValue = hasEmptyValue || (Array.isArray(value) ? value.length === 0 : value === "");
+      }
+
+      if (hasEmptyValue) {
+        // At least one value in inputs is an empty string or empty array
+        // Set it back to the default value
+        setInputs(defaultInputs);
+        return;
+      }
       updateProduct(productId, updatedProduct, dispatch)
     }
   }
@@ -233,7 +272,8 @@ const Product = () => {
               <label>Sizes</label>
               <input name='size' type="text" onChange={handleSizeChange} placeholder={product.size}/>
               <label>In Stock</label>
-              <select onChange={handleChange} name="inStock" id="inStock">
+              <select onChange={handleChange} defaultValue="Is the product currently in stock?" name="inStock" id="inStock">
+                <option disabled>Is the product currently in stock?</option>
                 <option value="true">Yes</option>  
                 <option value="false">No</option>  
               </select>

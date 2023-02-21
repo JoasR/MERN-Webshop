@@ -15,6 +15,7 @@ const UserList = () => {
   // const [data, setData] = useState(userRows)
   const dispatch = useDispatch()
 
+  const deleteMessage = useSelector(state => state.appUser.message)
   const appUsers = useSelector(state => state.appUser.appUsers)
 
   useEffect(() => {
@@ -70,7 +71,14 @@ const UserList = () => {
           pageSize={10}
           checkboxSelection
         />
-      </div>
+        { 
+          deleteMessage 
+          && 
+          <span className="message">
+            {deleteMessage}
+          </span>
+        }
+      </div>  
     </>
   )
 }

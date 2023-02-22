@@ -1,11 +1,13 @@
 import { Search, ShoppingCartOutlined } from '@mui/icons-material'
 import { Badge } from '@mui/material'
-import React from 'react'
+import React, { useEffect } from 'react'
 import styled from 'styled-components'
 import {mobile} from "../responsive"
 import { useDispatch, useSelector } from "react-redux"
 import { Link, useNavigate } from 'react-router-dom'
 import { logout } from "../redux/userRedux"
+import { loadCart, saveCart } from '../localstorage/cartLocalStorage'
+import { clearCart, setCart } from '../redux/cartRedux'
 
 const Container = styled.div`
     height: 60px;
@@ -53,6 +55,7 @@ const Center = styled.div`
 
 const Logo = styled.h1`
     font-weight: bold;
+    cursor: pointer;
     ${mobile({ fontSize: "24px" })}
 `
 
@@ -113,16 +116,36 @@ const DropdownContent = styled.div`
   }
 `
 
+const NavbarLink = styled(Link)`
+    text-decoration: none;
+    color: inherit;
+`
+
 const Navbar = () => {
     const quantity = useSelector(state => state.cart.quantity) // state.cart is from the store.js
     const currentUser = useSelector(state => state.user.currentUser) 
+    const userCart = useSelector(state => state.cart)
     const dispatch = useDispatch()
     const navigate = useNavigate()
 
     const handleLogout = () => {
+        dispatch(clearCart())
         dispatch(logout())
         navigate("/")
     }
+
+    useEffect(() => {
+        if (currentUser) {
+          const savedCart = loadCart(currentUser._id);
+          dispatch(setCart(savedCart));
+        }
+      }, [currentUser, dispatch]);
+    
+      useEffect(() => {
+        if (currentUser && userCart) {
+          saveCart(currentUser._id, userCart);
+        }
+      }, [currentUser, userCart]);
 
     return (
     <Container>
@@ -133,8 +156,10 @@ const Navbar = () => {
                     <Input placeholder='Search'/>
                     <Search style={{color: "gray", fontsize: "16px"}}/> 
                 </SearchContainer>   
-            </Left>    
-            <Center><Logo>FRISK.</Logo></Center>    
+            </Left>   
+            <NavbarLink style={{textDecoration: "none"}} to="/"> 
+                <Center><Logo>FRISK.</Logo></Center>    
+            </NavbarLink>
             <Right>
                 {currentUser 
                     ?   <Dropdown className="dropdown">
@@ -146,17 +171,21 @@ const Navbar = () => {
                             </DropdownContent>
                         </Dropdown>
                     :   <>
-                            <MenuItem>REGISTER</MenuItem>    
-                            <MenuItem>SIGN IN</MenuItem>
+                            <NavbarLink style={{textDecoration: "none"}} to="/register">
+                                <MenuItem>REGISTER</MenuItem>    
+                            </NavbarLink>
+                            <NavbarLink style={{textDecoration: "none"}} to="/login">
+                                <MenuItem>SIGN IN</MenuItem>
+                            </NavbarLink>
                         </>
                 }
-                <Link to="/cart">
+                <NavbarLink to="/cart">
                     <MenuItem>
                         <Badge badgeContent={quantity} color="primary">
                             <ShoppingCartOutlined style={{color: "000"}}/>
                         </Badge>
                     </MenuItem>    
-                </Link>
+                </NavbarLink>
             </Right>    
         </Wrapper>
     </Container>

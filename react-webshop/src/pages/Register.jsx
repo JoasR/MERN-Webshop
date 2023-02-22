@@ -274,8 +274,7 @@ const Register = () => {
                 )}
                 </InputWrapper>
                 <Agreement>
-                By creating an account, I consent to the processing of my personal data in accordance with the
-                <b>PRIVACY POLICY</b>
+                By creating an account, I consent to the processing of my personal data in accordance with the <b>PRIVACY POLICY</b>
                 </Agreement>
                 <Button disabled={!isFormValid || isFetching} onClick={handleClick}>
                 CREATE

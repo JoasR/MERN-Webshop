@@ -11,6 +11,7 @@ import logo from "../assets/frisk_logo.png"
 import { useState } from 'react'
 import { userRequest } from "../requestMethods"
 import { useNavigate } from 'react-router-dom'
+import CheckoutButton from '../components/CheckoutButton'
 
 const KEY = process.env.REACT_APP_STRIPE
 
@@ -228,7 +229,7 @@ const Cart = () => {
           <Bottom>
             <Info>
               {cart.products.map(product => (
-                 <Product key={product._id}>
+                 <Product key={`${product._id}${product.color}${product.size}`}>
                  <ProductDetail>
                    <Image src={product.img} />
                    <Details>
@@ -271,7 +272,7 @@ const Cart = () => {
                 <SummaryItemText>Total</SummaryItemText>
                 <SummaryItemPrice>€ {cart.total}</SummaryItemPrice>
               </SummaryItem>
-              <StripeCheckout 
+              {/* <StripeCheckout 
                 name="Frisk Shop"
                 image={logo}
                 billingAddress
@@ -283,7 +284,8 @@ const Cart = () => {
                 stripeKey={KEY}
               >
                   <Button>CHECKOUT NOW</Button>
-              </StripeCheckout>
+              </StripeCheckout> */}
+              <CheckoutButton cartItems={cart.products}/>
             </Summary>
           </Bottom>
         </Wrapper>

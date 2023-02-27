@@ -1,6 +1,11 @@
 const router = require("express").Router()
 const Order = require("../models/Order")
+const Cart = require("../models/Cart")
 const Product = require("../models/Product")
+const dotenv = require("dotenv")
+dotenv.config()
+const KEY = process.env.STRIPE_KEY
+const stripe = require("stripe")(KEY)
 const { verifyTokenAndAuthorization, verifyTokenAndAdmin, verifyToken } = require("./verifyToken")
 
 //CREATE
@@ -14,6 +19,84 @@ router.post("/", verifyToken, async (req, res) => {
         res.status(500).json(err)
     }
 })
+
+// router.post("/create-payment-intent", verifyTokenAndAuthorization, async (req, res, next) => {
+//   const products = req.body.products;
+  
+//   try {
+//     const foundProducts = await Promise.all(products.map(async (product) => {
+//       const foundProduct = await Product.findById(product.id);
+//       return { ...foundProduct._doc, quantity: product.quantity };
+//     }));
+    
+//     console.log(foundProducts); // For testing purposes
+    
+//     const totalPrice = foundProducts.reduce((accumulator, currentProduct) => {
+//       return accumulator + (currentProduct.price * currentProduct.quantity);
+//     }, 0);
+    
+//     console.log(totalPrice); // For testing purposes
+    
+//     // Rest of the code to create the payment intent
+//     const paymentIntent = await stripe.paymentIntents.create({
+//       amount: totalPrice * 100,
+//       currency: "eur",
+//       automatic_payment_methods: {
+//         enabled: true
+//       },
+      
+//     })
+//   } catch (error) {
+//     console.log(error);
+//     res.status(500).json({ message: "Failed to retrieve products" });
+//   }
+// });
+
+//TODO FINISH THIS PAYMENT INTENT!!!!
+// router.post("/create-payment-intent", verifyTokenAndAuthorization, async (req, res, next) => {
+
+//   const products = req.body.products
+
+//   const findProduct = await Product.findById(product._id) 
+
+//   const paymentIntent = await stripe.paymentIntents.create({
+//     amount: 5,
+//     currency: "eur",
+//     automatic_payment_methods: {
+//       enabled: true
+//     }
+//   })
+
+  // // Get the cart for a given user
+  // const cart = await Cart.findOne({ userId: req.params.userId });
+
+  // // Get the products in the cart
+  // const cartProducts = cart.products;
+
+  // // Get the actual Product documents for the products in the cart
+  // const productIds = cartProducts.map(product => product.productId);
+  // const products = await Product.find({ _id: { $in: productIds } });
+
+  // // Calculate the total price of the products in the cart
+  // const total = products.reduce((acc, product) => {
+  //   const productPrice = product.price;
+  //   const cartProduct = cartProducts.find(cp => cp.productId.toString() === product._id.toString());
+  //   const productQuantity = cartProduct.quantity;
+  //   return acc + (productPrice * productQuantity);
+  // }, 0);
+
+  // console.log(total); // Output: the total price of all products in the cart
+
+
+  // Create a payment intent with Stripe using the total price
+  // const paymentIntent = await stripe.paymentIntents.create({
+  //   amount: total * 100, // The total amount in cents
+  //   currency: 'eur',
+  //   payment_method_types: {
+  //     enabled: true
+  //   },
+  // });
+// })
 
 //UPDATE
 router.put("/:id", verifyTokenAndAdmin, async (req, res) => {

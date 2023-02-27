@@ -13,6 +13,8 @@ import {
 } from "react-router-dom"
 import Success from "./pages/Success";
 import { useSelector } from "react-redux";
+import CheckoutSuccess from "./pages/CheckoutSuccess";
+import NotFound from "./pages/NotFound";
 
 const App = () => {
   const user = useSelector((state) => state.user.currentUser)
@@ -29,8 +31,10 @@ const App = () => {
             element={ user ? <Navigate to="/"/> : <Login /> } 
           /> 
           <Route path="/register" 
-            element={ user ? <Navigate to="/" /> : <Register />}
+            element={ user ? <Navigate to="/" /> : <Register /> }
           />
+          <Route path="checkout-success" element={<CheckoutSuccess /> } />
+          <Route path="*" element={<NotFound /> } />
         </Routes>
       </ScrollToTop>
     </Router>

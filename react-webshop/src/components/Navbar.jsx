@@ -180,7 +180,7 @@ const Navbar = () => {
                         </>
                 }
                 <NavbarLink to="/cart">
-                    <MenuItem>
+                    <MenuItem style={{marginRight: "15px"}}>
                         <Badge badgeContent={quantity} color="primary">
                             <ShoppingCartOutlined style={{color: "000"}}/>
                         </Badge>

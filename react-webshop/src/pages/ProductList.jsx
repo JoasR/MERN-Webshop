@@ -70,7 +70,7 @@ const ProductList = () => {
     <Container>
         <Navbar />
         <Announcement />
-        <Title>{ toUpperCaseEachWord(cat) }</Title>
+        <Title>{ cat ? toUpperCaseEachWord(cat) : "All Products" }</Title>
         <FilterContainer>
             <Filter>
                 <FilterText></FilterText>

@@ -1,7 +1,7 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
 import styled from "styled-components"
-import { publicRequest, userRequest } from '../requestMethods'
+import { userRequest } from '../requestMethods'
 
 const Button = styled.button`
     width: 100%;

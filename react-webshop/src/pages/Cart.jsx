@@ -221,7 +221,7 @@ const Cart = () => {
           <Top>
             <TopButton>CONTINUE SHOPPING</TopButton>
             <TopTexts>
-              <TopText>Shopping Bag(2)</TopText>
+              <TopText>Shopping Bag({cart.quantity})</TopText>
               <TopText>Your Whishlist (0)</TopText>
             </TopTexts>
             <TopButton type="filled">CHECKOUT NOW</TopButton>

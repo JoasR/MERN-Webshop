@@ -4,6 +4,7 @@ import Announcement from '../components/Announcement'
 import Footer from '../components/Footer'
 import Navbar from '../components/Navbar'
 import { CheckCircleOutline } from '@mui/icons-material';
+import { useSelector } from 'react-redux'
 
 const TextContainer = styled.div`
     height: 50%;
@@ -28,12 +29,13 @@ const FooterContainer = styled.div`
 `
 
 const CheckoutSuccess = () => {
-  return (
+    const currentUser = useSelector(state => state.user.currentUser)
+    return (
     <>
         <Announcement />
         <Navbar />
         <TextContainer>
-            <SuccessText>Payment successfull, thank you for your purchase! You will be redirected shortly. <br /> Please do not close this page.</SuccessText>
+            <SuccessText>Payment successfull, thank you for your purchase {currentUser.firstName} {currentUser.lastName}! You will be redirected shortly. <br /> Please do not close this page.</SuccessText>
             <CheckCircleOutline style={{color: "green", height: "40%", width: "40%"}} />
         </TextContainer>
         <FooterContainer>

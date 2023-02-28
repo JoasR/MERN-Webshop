@@ -19,7 +19,7 @@ const Home = () => {
         <Navbar />
         <Slider />
         <Categories />
-        <Products />
+        <Products showAmount={8}/>
         <Newsletter />
         <Footer />
     </Container>

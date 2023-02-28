@@ -18,6 +18,23 @@ const cartSlice = createSlice({
             }
             state.total += action.payload.price * action.payload.quantity // this is not the quantity from the reducer but from the cart
         },
+        removeProduct: (state, action) => {
+            const { _id, size, color } = action.payload;
+            const index = state.products.findIndex(product => product._id === _id && product.size === size && product.color === color);
+            
+            if (index !== -1) {
+                if (state.products[index].quantity > 1) {
+                  state.products[index].quantity -= 1;
+                  state.quantity -= 1;
+                  state.total -= state.products[index].price;
+                } else {
+                    console.log("index " + index)
+                  state.quantity -= 1;
+                  state.total -= state.products[index].price;
+                  state.products.splice(index, 1);
+                }
+              }
+        },
         clearCart: (state) => {
             state.products = []
             state.quantity = 0
@@ -31,5 +48,5 @@ const cartSlice = createSlice({
     }
 })
 
-export const { addProduct, clearCart, setCart } = cartSlice.actions
+export const { addProduct, removeProduct, clearCart, setCart } = cartSlice.actions
 export default cartSlice.reducer

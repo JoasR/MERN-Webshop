@@ -11,11 +11,17 @@ const Button = styled.button`
     font-weight: 600;
     margin-top: 15px;
     cursor: pointer;
+
+    &:disabled{
+        opacity: 0.4;
+        cursor: not-allowed;
+    }
 `
 
 const CheckoutButton = ({cartItems}) => {
 
     const currentUser = useSelector(state => state.user.currentUser)
+    console.log(cartItems)
 
     const handleCheckout = async () => {
         try {
@@ -30,7 +36,7 @@ const CheckoutButton = ({cartItems}) => {
     }
 
   return (
-    <Button onClick={() => handleCheckout()}>CHECKOUT NOW</Button>
+    <Button disabled={cartItems.length === 0} onClick={() => handleCheckout()}>CHECKOUT NOW</Button>
   )
 }
 

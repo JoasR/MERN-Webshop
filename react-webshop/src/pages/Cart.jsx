@@ -1,19 +1,14 @@
 import { Add, Remove } from '@mui/icons-material'
-import React, { useEffect } from 'react'
-import { useSelector } from 'react-redux'
+import React from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 import Announcement from '../components/Announcement'
 import Footer from '../components/Footer'
 import Navbar from '../components/Navbar'
 import { mobile } from '../responsive'
-import StripeCheckout from "react-stripe-checkout"
-import logo from "../assets/frisk_logo.png"
-import { useState } from 'react'
-import { userRequest } from "../requestMethods"
-import { useNavigate } from 'react-router-dom'
 import CheckoutButton from '../components/CheckoutButton'
-
-const KEY = process.env.REACT_APP_STRIPE
+import { useNavigate } from 'react-router-dom'
+import { removeProduct } from '../redux/cartRedux'
 
 const Container = styled.div`
 
@@ -173,44 +168,21 @@ const SummaryItemPrice = styled.span`
 
 `
 
-const Button = styled.button`
-  width: 100%;
-  padding: 10px;
-  background-color: #000;
-  color: #fff;
-  font-weight: 600;
-  margin-top: 15px;
-  cursor: pointer;
-`
+// const Button = styled.button`
+//   width: 100%;
+//   padding: 10px;
+//   background-color: #000;
+//   color: #fff;
+//   font-weight: 600;
+//   margin-top: 15px;
+//   cursor: pointer;
+// `
 
 const Cart = () => {
   const cart = useSelector(state => state.cart)
-  const [stripeToken, setStripeToken] = useState(null)
+
+  const dispatch = useDispatch()
   const navigate = useNavigate()
-
-  const onToken = (token) => {
-    setStripeToken(token)
-  }
-
-  useEffect(() => {
-    const makeRequest = async () => {
-      try {
-        const res = await userRequest.post("/checkout/payment", {
-          tokenId: stripeToken.id,
-          amount: cart.total * 100,
-        })
-        console.log(res.data)
-        navigate("/success", {
-          state: { 
-            stripeData: res.data,
-            products: cart      
-        }})
-      } catch (err) {
-        console.log(err)
-      }
-    }
-    stripeToken && makeRequest()
-  }, [stripeToken, cart, navigate])
 
   return (
     <Container>
@@ -219,7 +191,7 @@ const Cart = () => {
         <Wrapper>
           <Title>YOUR BAG</Title>
           <Top>
-            <TopButton>CONTINUE SHOPPING</TopButton>
+            <TopButton onClick={() => navigate("/products")}>CONTINUE SHOPPING</TopButton>
             <TopTexts>
               <TopText>Shopping Bag({cart.quantity})</TopText>
               <TopText>Your Whishlist (0)</TopText>
@@ -244,7 +216,7 @@ const Cart = () => {
                  </ProductDetail>
                  <PriceDetail>
                    <ProductAmountContainer>
-                     <Remove style={{cursor: 'pointer'}} />
+                     <Remove style={{cursor: 'pointer'}} onClick={() => dispatch(removeProduct(product))}/>
                      <ProductAmount>{product.quantity}</ProductAmount>
                      <Add style={{cursor: 'pointer'}} />
                    </ProductAmountContainer>
@@ -272,19 +244,6 @@ const Cart = () => {
                 <SummaryItemText>Total</SummaryItemText>
                 <SummaryItemPrice>€ {cart.total}</SummaryItemPrice>
               </SummaryItem>
-              {/* <StripeCheckout 
-                name="Frisk Shop"
-                image={logo}
-                billingAddress
-                shippingAddress
-                description={`Your total is €${cart.total}`}
-                amount={cart.total * 100}
-                currency="EUR"
-                token={onToken}
-                stripeKey={KEY}
-              >
-                  <Button>CHECKOUT NOW</Button>
-              </StripeCheckout> */}
               <CheckoutButton cartItems={cart.products}/>
             </Summary>
           </Bottom>

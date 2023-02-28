@@ -1,10 +1,12 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import styled from 'styled-components'
 import Announcement from '../components/Announcement'
 import Footer from '../components/Footer'
 import Navbar from '../components/Navbar'
 import { CheckCircleOutline } from '@mui/icons-material';
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
+import { clearCart } from '../redux/cartRedux'
+import { useNavigate } from 'react-router-dom'
 
 const TextContainer = styled.div`
     height: 50%;
@@ -30,6 +32,16 @@ const FooterContainer = styled.div`
 
 const CheckoutSuccess = () => {
     const currentUser = useSelector(state => state.user.currentUser)
+    const dispatch = useDispatch()
+    const navigate = useNavigate()
+
+    useEffect(() => {
+        dispatch(clearCart())
+        setTimeout(() => {
+            navigate("/")
+        }, 5000)
+    }, [dispatch, navigate])
+
     return (
     <>
         <Announcement />

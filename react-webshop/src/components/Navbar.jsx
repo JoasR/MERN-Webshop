@@ -121,6 +121,13 @@ const NavbarLink = styled(Link)`
     color: inherit;
 `
 
+const Hr = styled.hr`
+    color: lightgray;
+    opacity: 0.5;
+    width: 80%;
+    margin: 5px auto;
+`
+
 const Navbar = () => {
     const quantity = useSelector(state => state.cart.quantity) // state.cart is from the store.js
     const currentUser = useSelector(state => state.user.currentUser) 
@@ -165,6 +172,16 @@ const Navbar = () => {
                     ?   <Dropdown className="dropdown">
                             <MainMenuItem>{(currentUser.username).toUpperCase()}</MainMenuItem>
                             <DropdownContent className="dropdown-content">
+                                <MenuItemContainer> 
+                                    <MenuItem>MY FAVOURITES</MenuItem>
+                                </MenuItemContainer>
+                                <MenuItemContainer> 
+                                    <MenuItem>MY ORDERS</MenuItem>
+                                </MenuItemContainer>
+                                <MenuItemContainer> 
+                                    <MenuItem>MY ACCOUNT</MenuItem>
+                                </MenuItemContainer>
+                                <Hr />
                                 <MenuItemContainer onClick={handleLogout}> 
                                     <MenuItem>LOGOUT</MenuItem>
                                 </MenuItemContainer>

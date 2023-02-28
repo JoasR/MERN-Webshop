@@ -13,4 +13,11 @@ const ProductSchema = new mongoose.Schema(
     },
     { timestamps: true }
 )
+
+ProductSchema.pre('save', function(next) {
+    const uppercaseArray = this.size.map(str => str.toUpperCase());
+    this.size = uppercaseArray;
+    next();
+  });
+
 module.exports = mongoose.model("Product", ProductSchema)

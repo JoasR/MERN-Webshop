@@ -8,7 +8,7 @@ import Navbar from '../components/Navbar'
 import { mobile } from '../responsive'
 import CheckoutButton from '../components/CheckoutButton'
 import { useNavigate } from 'react-router-dom'
-import { removeProduct } from '../redux/cartRedux'
+import { addExtraProductToCart, removeProduct } from '../redux/cartRedux'
 
 const Container = styled.div`
 
@@ -184,6 +184,9 @@ const Cart = () => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
 
+  const SHIPPING_AMOUNT_FOR_DISCOUNT = 50
+  const SHIPPING_COST = 4.99
+
   return (
     <Container>
         <Navbar />
@@ -218,7 +221,7 @@ const Cart = () => {
                    <ProductAmountContainer>
                      <Remove style={{cursor: 'pointer'}} onClick={() => dispatch(removeProduct(product))}/>
                      <ProductAmount>{product.quantity}</ProductAmount>
-                     <Add style={{cursor: 'pointer'}} />
+                     <Add style={{cursor: 'pointer'}} onClick={() => dispatch(addExtraProductToCart(product))} />
                    </ProductAmountContainer>
                    <ProductPrice>€ {product.price * product.quantity}</ProductPrice>
                  </PriceDetail>
@@ -234,15 +237,15 @@ const Cart = () => {
               </SummaryItem>
               <SummaryItem>
                 <SummaryItemText>Estimated Shipping</SummaryItemText>
-                <SummaryItemPrice>€ 5.90</SummaryItemPrice>
+                <SummaryItemPrice>€ {cart.total > 0 ? SHIPPING_COST : 0}</SummaryItemPrice>
               </SummaryItem>
               <SummaryItem>
                 <SummaryItemText>Shipping Discount</SummaryItemText>
-                <SummaryItemPrice>€ -5.90</SummaryItemPrice>
+                <SummaryItemPrice>€ {(cart.total <= SHIPPING_AMOUNT_FOR_DISCOUNT) ? 0 : SHIPPING_COST}</SummaryItemPrice>
               </SummaryItem>
               <SummaryItem type="total">
                 <SummaryItemText>Total</SummaryItemText>
-                <SummaryItemPrice>€ {cart.total}</SummaryItemPrice>
+                <SummaryItemPrice>€ {(cart.total <= SHIPPING_AMOUNT_FOR_DISCOUNT && cart.total > 0) ? cart.total + SHIPPING_COST : cart.total}</SummaryItemPrice>
               </SummaryItem>
               <CheckoutButton cartItems={cart.products}/>
             </Summary>

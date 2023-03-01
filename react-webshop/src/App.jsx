@@ -1,3 +1,6 @@
+import { ToastContainer } from "react-toastify"
+import "react-toastify/dist/ReactToastify.css"
+
 import Home from "./pages/Home";
 import Cart from "./pages/Cart";
 import Login from "./pages/Login";
@@ -20,6 +23,7 @@ const App = () => {
   const user = useSelector((state) => state.user.currentUser)
   return (
     <Router>
+      <ToastContainer />
       <ScrollToTop>
         <Routes>
           <Route exact path="/" element={<Home />} />

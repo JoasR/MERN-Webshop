@@ -21,7 +21,6 @@ const Button = styled.button`
 const CheckoutButton = ({cartItems}) => {
 
     const currentUser = useSelector(state => state.user.currentUser)
-    console.log(cartItems)
 
     const handleCheckout = async () => {
         try {
@@ -30,8 +29,7 @@ const CheckoutButton = ({cartItems}) => {
                 userId: currentUser?._id
             })
             window.location.href = res.data.url
-        } catch (error) {
-            console.log(error.message)   
+        } catch (error) {  
         }          
     }
 

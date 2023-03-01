@@ -196,7 +196,7 @@ const Navbar = () => {
                             </NavbarLink>
                         </>
                 }
-                <NavbarLink to="/cart">
+                <NavbarLink to={currentUser ? "/cart" : "/register" }>
                     <MenuItem style={{marginRight: "15px"}}>
                         <Badge badgeContent={quantity} color="primary">
                             <ShoppingCartOutlined style={{color: "000"}}/>

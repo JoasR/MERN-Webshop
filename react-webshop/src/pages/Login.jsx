@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 import { login } from '../redux/apiCalls'
 import { mobile } from '../responsive'
+import { Link } from "react-router-dom"
 
 const Container = styled.div`
     width: 100vw;
@@ -59,11 +60,16 @@ const Button = styled.button`
     }
 `
 
-const Link = styled.a`
+const LinkMessage = styled.a`
     margin: 5px 0px;
     font-size: 12px;
     text-decoration: underline;
     cursor: pointer;
+`
+
+const RedirectLink = styled(Link)`
+    text-decoration: none;
+    color: inherit;
 `
 
 const Error = styled.span`
@@ -93,8 +99,10 @@ const Login = () => {
                     {error &&
                         <Error>{error}</Error> 
                     }
-                    <Link>FORGOT PASSWORD?</Link>
-                    <Link>CREATE A NEW ACCOUNT</Link>
+                    <LinkMessage>FORGOT PASSWORD?</LinkMessage>
+                    <RedirectLink to="/register">
+                        <LinkMessage>NEW HERE? CREATE A NEW ACCOUNT NOW</LinkMessage>
+                    </RedirectLink>
                 </Form>
             </Wrapper>
         </Container>

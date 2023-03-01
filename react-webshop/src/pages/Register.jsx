@@ -4,6 +4,7 @@ import { mobile } from '../responsive'
 import { useState } from "react"
 import { register } from '../redux/apiCalls'
 import { useDispatch, useSelector } from 'react-redux'
+import { Link } from 'react-router-dom'
 
 const Container = styled.div`
     width: 100vw;
@@ -72,6 +73,18 @@ const InputWrapper = styled.div`
     display: flex;
     flex-direction: column;
     min-width: 40%;
+`
+
+const GoToSignInMessage = styled.div`
+    margin: 10px 0px;
+    font-size: 12px;
+    text-decoration: underline;
+    cursor: pointer;
+`
+
+const LoginLink = styled(Link)`
+  text-decoration: none;
+  color: inherit;
 `
 
 const Register = () => {
@@ -281,6 +294,9 @@ const Register = () => {
                 </Button>
                 { error && <ErrorMessage style={{marginLeft: "10px", marginTop: "15px"}}>{error}</ErrorMessage> }
             </Form>
+            <LoginLink to="/login">
+              <GoToSignInMessage>ALREADY HAVE AN ACCOUNT? CLICK HERE TO SIGN IN</GoToSignInMessage>
+            </LoginLink>
         </Wrapper>
     </Container>
   )

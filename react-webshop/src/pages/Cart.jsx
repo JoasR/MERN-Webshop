@@ -241,7 +241,7 @@ const Cart = () => {
               </SummaryItem>
               <SummaryItem>
                 <SummaryItemText>Shipping Discount</SummaryItemText>
-                <SummaryItemPrice>€ {(cart.total <= SHIPPING_AMOUNT_FOR_DISCOUNT) ? 0 : SHIPPING_COST}</SummaryItemPrice>
+                <SummaryItemPrice>- € {(cart.total <= SHIPPING_AMOUNT_FOR_DISCOUNT) ? 0 : SHIPPING_COST}</SummaryItemPrice>
               </SummaryItem>
               <SummaryItem type="total">
                 <SummaryItemText>Total</SummaryItemText>

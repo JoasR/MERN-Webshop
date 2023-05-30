@@ -1,13 +1,13 @@
 const router = require("express").Router()
 const dotenv = require("dotenv")
-const { verifyTokenAndAuthorization } = require("./verifyToken")
+const { verifyToken } = require("./verifyToken")
 dotenv.config()
 const KEY = process.env.STRIPE_KEY
 const stripe = require("stripe")(KEY)
 const Product = require("../models/Product")
 
 
-router.post("/create-checkout-session", verifyTokenAndAuthorization, async (req, res) => {
+router.post("/create-checkout-session", verifyToken, async (req, res) => {
   try {    
     const foundProductsFromCart = await Promise.all(req.body.cartItems.map(async (item) => {
       const foundProduct = await Product.findById(item._id);

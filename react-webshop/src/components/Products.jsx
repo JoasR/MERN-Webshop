@@ -79,7 +79,7 @@ const Products = ({ cat, filters, sort, showAmount }) => {
   }, [products, filters]);
 
   useEffect(() => {
-    console.log(sort)
+    //console.log(sort)
     if (sort === "newest") {
       setFilteredProducts((prev) =>
         [...prev].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))

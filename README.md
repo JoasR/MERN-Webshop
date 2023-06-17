@@ -10,6 +10,10 @@ TODO:
 
 -Improvements:
   * Change password encryption from AES to SHA-256 with Salt
+  * Add functionality to all buttons, not all buttons have their functionality yet e.g. one of the checkout buttons in the cart page. Should just get the implementation from the other checkout button
+  * Add proper images, not only test images
 
 -Bugs:
   * Change the way ID is displayed or remove it when the user is on mobile devices, since this breaks the responsive Layout
+  * Checkout does sometimes give a 403 forbidden request
+    - Only happens sometimes

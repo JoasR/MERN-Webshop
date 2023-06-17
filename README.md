@@ -10,3 +10,6 @@ TODO:
 
 -Improvements:
   * Change password encryption from AES to SHA-256 with Salt
+
+-Bugs:
+  * Change the way ID is displayed or remove it when the user is on mobile devices, since this breaks the responsive Layout
